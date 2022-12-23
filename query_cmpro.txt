@@ -1,0 +1,36 @@
+insert into d_adb.t_cards (customerName, accountNumber, cardNumber, operationType, pickupBranch, productionDate, dispatchDate, pickupDate, batchId, createDate) select name, accno, cardno, transtype, dest_branch_id, concat(right(pr_date,4), "-", left(right(pr_date,7),2), "-", left(right(pr_date,10),2)) productionDate, dispatch_date, concat(right(left(pickup_date,10),4),"-",left(pickup_date,2),"-",right(left(pickup_date,5),2)) pickup_date, batchno, concat(right(left(cr_date,10),4),"-",left(cr_date,2),"-",right(left(cr_date,5),2)) from db_adb.card_inv where pickup_date like '%2009%' and length(pickup_date)=19;
+
+select concat(right(left(pickup_date,10),4),"-",left(pickup_date,2),"-",right(left(pickup_date,5),2)) datte, pickup_date,concat(right(pr_date,4), "-", left(right(pr_date,7),2), "-", left(right(pr_date,10),2)) pr_datee,pr_date from db_adb.card_inv where pickup_date like '%2009%' \G
+
+update d_adb.t_cards set pickupDate = concat(right(left(pickup_date,10),4),"-",right(left(pickup_date,5),2),"-",left(pickup_date,2)," ",right(pickupDate,8))
+
+insert into d_adb.t_cards (customerName, accountNumber, cardNumber, operationType, pickupBranch, productionDate,  pickupDate, createDate) select a.name, accno, cardno, transtype, b.b_id, concat(right(pr_date,4), "-", left(right(pr_date,7),2), "-", left(right(pr_date,10),2)) productionDate, dispatch_date, concat(right(left(pickup_date,10),4),"-",left(pickup_date,2),"-",right(left(pickup_date,5),2)) pickup_date, batchno, concat(right(left(concat('0',a.cr_date),10),4),"-",left(concat('0',a.cr_date),2),"-",right(left(concat('0',a.cr_date),5),2),right(a.cr_date,9)) createDate from db_adb.card_inv a left join db_adb.branches b on a.dest_branch_id = b.id where a.pickup_date like '%2009%' and length(pickup_date)=19 and length(a.cr_date)=18 and length(pr_date)=\G
+
+
+
+select concat(right(pr_date,4),"-",right(left(pr_date,4),1),"-",left(pr_date,1)) proDate, concat(right(pr_date,4), "-", left(right(pr_date,7),2), "-", left(right(pr_date,10),2)) prDate, count(8) countt from db_adb.card_inv where pr_date like '%2009%' and length(pr_date)=8 group by concat(right(pr_date,4), "-", left(right(pr_date,7),2), "-", left(right(pr_date,10),2)), pr_date;
+
+insert into d_adb.t_cards (customerName, accountNumber, cardNumber, operationType, pickupBranch, productionDate,  pickupDate, createDate)
+select a.name, accno, cardno, transtype, b.b_id, pr_date,  pickup_date, a.cr_date from db_adb.card_inv a left join db_adb.branches b on a.dest_branch_id = b.id
+
+
+select 
+	 pr_date
+	,concat(
+		left(pr_date,5)
+		,concat(
+			'0',
+			right(left(pr_date,7),2)
+		      )
+		,concat('0',right(pr_date,1))
+	       ) from db_adb.card_inv where length(pr_date) is null;
+
+update db_adb.card_inv set pr_date='0000-00-00 00:00:00'
+	       ) where length(pr_date) is null;
+
+
+
+
+select pickup_date, concat(right(left(pickup_date,8),4),"-",concat('0',left(pickup_date,1)),"-",concat('0',right(left(pickup_date,3),1)), right(pickup_date,9)) proDate, concat(right(pickup_date,4), "-", left(right(pickup_date,7),2), "-", left(right(pickup_date,10),2)) prDate, count(8) countt from db_adb.card_inv where  length(pickup_date)=17 group by pickup_date,concat(right(pickup_date,4), "-", left(right(pickup_date,7),2), "-", left(right(pickup_date,10),2)), pickup_date limit 0,10;
+
+update db_adb.card_inv set pickup_date=concat(right(left(pickup_date,8),4),"-",concat('0',left(pickup_date,1)),"-",concat('0',right(left(pickup_date,3),1)), right(pickup_date,9)) where  length(pickup_date)=17;
