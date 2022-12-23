@@ -1,0 +1,183 @@
+// Database User Creation
+
+	use mysql
+	
+	INSERT INTO USER(
+		host, user, password, select_priv, Insert_priv, Update_priv, Delete_priv
+		)
+	values
+	( 'localhost', 'adb', password('adb123'), 'Y', 'Y', 'Y', 'Y');
+
+ 
+// Create and grant privilleges on site DB
+
+	create database D_ADB;
+	use D_ADB;
+	Grant all on D_ADB.* to adb@localhost;
+
+ 
+// Create table to hold ATM details
+
+	CREATE TABLE t_atm
+	(
+		id int(4) NOT NULL AUTO_INCREMENT,
+		code int(4) DEFAULT NULL,
+		ip varchar(15) COLLATE latin1_general_ci DEFAULT NULL,
+		comport int(4) DEFAULT NULL,
+		branchCode int(3) DEFAULT NULL,
+		serviceDate datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+		installDate date NOT NULL DEFAULT '0000-00-00',
+		custodianContact char(10) COLLATE latin1_general_ci DEFAULT NULL,
+		modifiedDate datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+		createDate timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+		PRIMARY KEY (id)
+	) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci
+
+// Create table to hold site users
+
+	CREATE TABLE t_users
+	(
+		id smallint(5) unsigned NOT NULL AUTO_INCREMENT,
+		userName varchar(25) NOT NULL,
+		password varchar(42) NOT NULL,
+		lastName tinytext NOT NULL,
+		otherNames tinytext,
+		accesslevel int(1) unsigned DEFAULT '10',
+		accountStatus tinyint(1) NOT NULL DEFAULT '0',
+		changePassword int(11) NOT NULL DEFAULT '0',
+		logonDate datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+		lastVisit datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+		loginStatus tinyint(1) NOT NULL,
+		createDate timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+		modifiedDate timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+		PRIMARY KEY (id)
+	) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=latin1
+
+
+// Create table to hold cards
+
+	CREATE TABLE t_cards
+	(
+		id int(10) unsigned NOT NULL AUTO_INCREMENT,
+		customerName varchar(60) COLLATE latin1_general_ci NOT NULL,
+		accountNumber varchar(19) COLLATE latin1_general_ci NOT NULL,
+		cardNumber varchar(19) COLLATE latin1_general_ci NOT NULL,
+		operationType varchar(25) COLLATE latin1_general_ci NOT NULL DEFAULT 'UNKNOWN',
+		pickupBranch int(3) DEFAULT NULL,
+		productionDate date DEFAULT NULL,
+		dispatchDate datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+		pickupDate datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+		batchId smallint(6) NOT NULL,
+		createDate timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+		modifiedDate datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+		PRIMARY KEY (id),
+		KEY accountNumber (accountNumber)
+	) ENGINE=MyISAM AUTO_INCREMENT=16 DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci
+
+// Create table to hold branches
+
+	CREATE TABLE t_branches
+	(
+		id smallint(5) unsigned NOT NULL AUTO_INCREMENT,
+		name tinytext COLLATE latin1_general_ci,
+		branchId smallint(3) DEFAULT NULL,
+		phone varchar(15) COLLATE latin1_general_ci DEFAULT NULL,
+		region smallint(2) DEFAULT NULL,
+		address varchar(15) COLLATE latin1_general_ci DEFAULT NULL,
+		atmId smallint(3) DEFAULT NULL,
+		createDate timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+		modifiedDate timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+		PRIMARY KEY (id),
+		KEY branchId (branchId)
+	) ENGINE=MyISAM AUTO_INCREMENT=79 DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci
+	
+
+// Create file upload log table
+
+	CREATE TABLE t_filelog
+	(
+		id smallint(5) unsigned NOT NULL AUTO_INCREMENT,
+		userName varchar(25) COLLATE latin1_general_ci NOT NULL DEFAULT 'UNKNOWN',
+		fileName tinytext COLLATE latin1_general_ci NOT NULL,
+		createDate timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+		modifiedDate timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+		operationType varchar(25) COLLATE latin1_general_ci NOT NULL DEFAULT 'UNKNOWN',
+		PRIMARY KEY (id),
+		KEY id (id)
+	) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci
+
+// Create tracker table
+
+	CREATE TABLE t_tracker
+	(
+		id int(11) NOT NULL AUTO_INCREMENT,
+		browser varchar(255) NOT NULL DEFAULT '',
+		ip varchar(15) NOT NULL DEFAULT '',
+		visitedDate datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+		page varchar(255) NOT NULL DEFAULT '',
+		fromPage varchar(255) NOT NULL DEFAULT '',
+		user varchar(150) NOT NULL DEFAULT '',
+		userid int(11) DEFAULT '0',
+		PRIMARY KEY (id)
+	) ENGINE=MyISAM AUTO_INCREMENT=4047 DEFAULT CHARSET=utf8
+
+
+// Create table to hold Card Request
+
+	CREATE TABLE t_request
+	(
+		id int(5) unsigned NOT NULL AUTO_INCREMENT,
+		customerName varchar(60) COLLATE latin1_general_ci NOT NULL,
+		accountNumber varchar(19) COLLATE latin1_general_ci NOT NULL,
+		phone varchar(15) COLLATE latin1_general_ci DEFAULT NULL,
+		email varchar(50) NOT NULL DEFAULT '',
+		requestType varchar(25) COLLATE latin1_general_ci NOT NULL DEFAULT 'UNKNOWN',
+		cardType enum('VISA','PROPRIETARY') COLLATE latin1_general_ci DEFAULT 'PROPRIETARY',
+		status enum('OPEN','APPROVED','DONE') COLLATE latin1_general_ci DEFAULT 'OPEN',
+		pickupBranch int(3) DEFAULT NULL,
+		userid int(11) DEFAULT '0',
+		requestDate date NOT NULL DEFAULT '0000-00-00',
+		approvedDate datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+		createDate timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+		modifiedDate datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+		PRIMARY KEY (id)
+	) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci
+
+
+// Create table to hold Customer Complaint transactions
+
+	CREATE TABLE t_complaint
+	(
+		id int(10) unsigned NOT NULL AUTO_INCREMENT,
+		customerName varchar(60) COLLATE latin1_general_ci NOT NULL,
+		accountNumber varchar(19) COLLATE latin1_general_ci NOT NULL,
+		officerName varchar(60) COLLATE latin1_general_ci NOT NULL,
+		complaintDate date NOT NULL DEFAULT '0000-00-00',
+		cardType enum('VISA','PROPRIETARY') COLLATE latin1_general_ci DEFAULT 'PROPRIETARY',
+		phone varchar(10) COLLATE latin1_general_ci,
+		reportingBranch int(3) DEFAULT NULL,
+		customerBranch int(3) DEFAULT NULL,
+
+		cardComplaint varchar(60) COLLATE latin1_general_ci NULL,
+		actionTaken varchar(255) COLLATE latin1_general_ci NULL,
+		account1 varchar(16) COLLATE latin1_general_ci NULL,
+		account2 varchar(16) COLLATE latin1_general_ci NULL,
+		cardAtm varchar(4) COLLATE latin1_general_ci NULL,
+		cardAmt varchar(7) COLLATE latin1_general_ci NULL,
+		cashIssueDateTime timestamp NULL DEFAULT '0000-00-00 00:00:00',
+
+		cashComplaint varchar(60) COLLATE latin1_general_ci NULL,
+		customerBank varchar(15) COLLATE latin1_general_ci NULL,
+		cashAtm varchar(4) COLLATE latin1_general_ci NULL,
+		cashAmt varchar(7) COLLATE latin1_general_ci NULL,
+		receiptNo varchar(15) COLLATE latin1_general_ci NULL,
+		cardIssueDateTime timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+		comment varchar(255) COLLATE latin1_general_ci NULL,
+		userId int(10) unsigned NULL,
+
+		createDate timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+		modifiedDate datetime NULL DEFAULT '0000-00-00 00:00:00',
+
+		PRIMARY KEY (id),
+		KEY accountNumber (accountNumber)
+	) ENGINE=MyISAM AUTO_INCREMENT=16 DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci
